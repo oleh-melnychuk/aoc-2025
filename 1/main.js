@@ -2,6 +2,20 @@ const fs = require('fs');
 const path = require('path');
 
 
+const getCountOfZero = (previousPosition, position) => {
+     if (position < 0){
+        const value = Math.abs(Math.trunc(position / 100));
+        return previousPosition === 0 ? value : value + 1;
+     }
+     if(position >= 100) {
+        return Math.abs(Math.trunc(position / 100));
+     }
+     if(position === 0){
+        return 1;
+     }
+     return 0;
+ }
+
 const main = () => {
 
     console.log(path.join(__dirname, 'db', 'task1.txt'))
@@ -10,7 +24,8 @@ const main = () => {
    
 
    let position = 50;
-   let countOfSteps = 0;
+   let previousPosition = 50;
+   let countOfExtremlyZero = 0;
    let countOfZero = 0;
 
 
@@ -22,7 +37,6 @@ const main = () => {
         continue;
     }
 
-    console.log('direction', direction, 'count', count);
 
 
     // move left
@@ -34,11 +48,13 @@ const main = () => {
         position += count;
     }
 
+    countOfZero += getCountOfZero(previousPosition, position);
+
 
     // if position is 0, increment countOfZero
     if(position === 0  || position % 100 === 0) {
-        countOfZero += 1;
-        continue;
+        countOfExtremlyZero += 1;
+        position = 0;
     }
 
     //  If position is less than 0, set position to positive value from another side of the circle
@@ -50,15 +66,11 @@ const main = () => {
         position = position % 100;
     }
 
-    // increment count of steps
-    countOfSteps += 1;
-    console.log('position', position);
-    console.log('________________________________________');
+    previousPosition = position;
+
    }
 
-   console.log(position);
-   console.log('countOfZero', countOfZero);
-   console.log('countOfSteps', countOfSteps);
+   console.log('countOfZero', countOfZero, 'countOfExtremlyZero', countOfExtremlyZero);
 }
 
 main();
